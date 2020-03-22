@@ -103,6 +103,8 @@ class PreProcessor {
                         $lines = $this->skipIf($lines);
                         break;
                     case 'endif':
+                    case 'region':
+                    case 'endregion':
                         // ignore
                         break;
                     case 'error':
