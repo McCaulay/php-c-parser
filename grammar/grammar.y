@@ -41,7 +41,7 @@ enumeration_constant        /* before it has been defined as such */
     ;
 
 string
-    : STRING_LITERAL        { throw new Error('string_literal not implemented'); }
+    : STRING_LITERAL        { $$ = Node\Stmt\ValueStmt\Expr\StringLiteral[$1]; }
     | FUNC_NAME             { throw new Error('func name not implemented'); }
     ;
 
@@ -61,7 +61,7 @@ generic_association
 
 postfix_expression
     : primary_expression                                   { $$ = $1; }
-    | postfix_expression '[' expression ']'                { throw new Error('dim fetch not implemented'); }
+    | postfix_expression '[' expression ']'                { $$ = $1; }
     | postfix_expression '(' ')'                           { $$ = Expr\CallExpr[$1, []]; }
     | postfix_expression '(' argument_expression_list ')'  { $$ = Expr\CallExpr[$1, $3]; }
     | postfix_expression '.' IDENTIFIER                    { throw new Error('.identifier not implemented'); }
@@ -424,7 +424,7 @@ direct_abstract_declarator
 initializer
     : '{' initializer_list '}'      { throw new Error('initializer brackend no trailing not implemented'); }
     | '{' initializer_list ',' '}'  { throw new Error('initializer brackeded trailing not implemented'); }
-    | assignment_expression         { throw new Error('initializer assignment_expression not implemented'); }
+    | assignment_expression         { $$ = $1; }
     ;
 
 initializer_list
@@ -463,8 +463,8 @@ statement
 
 labeled_statement
     : IDENTIFIER ':' statement                  { throw new Error('labeled_statement identifier not implemented'); }
-    | CASE constant_expression ':' statement    { throw new Error('labeled_statement case not implemented'); }
-    | DEFAULT ':' statement                     { throw new Error('labeled_statement default not implemented'); }
+    | CASE constant_expression ':' statement    { $$ = Node\Stmt\CaseStmt[$2, $4]; }
+    | DEFAULT ':' statement                     { $$ = Node\Stmt\CaseStmt[null, $3]; }
     ;
 
 compound_statement
@@ -478,7 +478,7 @@ block_item_list
     ;
 
 block_item
-    : declaration           { throw new Error('block_item declaration not implemented'); }
+    : declaration           { /*Skip?*/ }
     | statement             { $$ = $1; }
     ;
 
@@ -488,13 +488,13 @@ expression_statement
     ;
 
 selection_statement
-    : IF '(' expression ')' statement ELSE statement    { throw new Error('if else not implemented'); }
-    | IF '(' expression ')' statement                   { throw new Error('if not implemented'); }
-    | SWITCH '(' expression ')' statement               { throw new Error('switch not implemented'); }
+    : IF '(' expression ')' statement ELSE statement    { $$ = Node\Stmt\IfStmt[$3, ['stmts' => toArray($5), 'elseifs' => $6, 'else' => $7]]; }
+    | IF '(' expression ')' statement                   { $$ = Node\Stmt\IfStmt[$3, ['stmts' => toArray($5)]]; }
+    | SWITCH '(' expression ')' statement               { $$ = Node\Stmt\SwitchStmt[$3, $5]; }
     ;
 
 iteration_statement
-    : WHILE '(' expression ')' statement                                            { throw new Error('iteration 0 not implemented'); }
+    : WHILE '(' expression ')' statement                                            { $$ = Node\Stmt\WhileStmt[$3, $5]; }
     | DO statement WHILE '(' expression ')' ';'                                     { throw new Error('iteration 1 not implemented'); }
     | FOR '(' expression_statement expression_statement ')' statement               { throw new Error('iteration 2 not implemented'); }
     | FOR '(' expression_statement expression_statement expression ')' statement    { throw new Error('iteration 3 not implemented'); }
@@ -505,7 +505,7 @@ iteration_statement
 jump_statement
     : GOTO IDENTIFIER ';'       { throw new Error('goto identifier not implemented'); }
     | CONTINUE ';'              { throw new Error('continue not implemented'); }
-    | BREAK ';'                 { throw new Error('break not implemented'); }
+    | BREAK ';'                 { $$ = Node\Stmt\CaseStmt[$2]; }
     | RETURN ';'                { $$ = Node\Stmt\ReturnStmt[null]; }
     | RETURN expression ';'     { $$ = Node\Stmt\ReturnStmt[$2]; }
     ;

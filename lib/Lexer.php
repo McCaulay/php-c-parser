@@ -76,6 +76,12 @@ class Lexer
         throw new \LogicException("Unknown token type encountered: {$this->currentToken->type}");
     }
 
+    private function extractLiteral(): array {
+        $literal = $this->currentToken->value;
+        $this->currentToken = $this->currentToken->next;
+        return [Tokens::T_STRING_LITERAL, $literal];
+    }
+
     private function extractNumber(): array {
         $number = $this->currentToken->value;
         $this->currentToken = $this->currentToken->next;

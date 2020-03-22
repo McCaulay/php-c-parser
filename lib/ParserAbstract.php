@@ -231,6 +231,7 @@ abstract class ParserAbstract
                     /* error */
                     switch ($this->errorState) {
                         case 0:
+                            dd($endAttributes);
                             $msg = $this->getErrorMessage($symbol, $tokenValue, $state);
                             $this->emitError(new Error($msg, $startAttributes + $endAttributes));
                             // Break missing intentionally

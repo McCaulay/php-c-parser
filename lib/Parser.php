@@ -802,7 +802,7 @@ class Parser extends ParserAbstract
                  $this->semValue = $this->semStack[$stackPos-(1-1)]; 
             },
             10 => function ($stackPos) {
-                 throw new Error('string_literal not implemented'); 
+                 $this->semValue = new Node\Stmt\ValueStmt\Expr\StringLiteral($this->semStack[$stackPos-(1-1)], $this->startAttributeStack[$stackPos-(1-1)] + $this->endAttributes); 
             },
             11 => function ($stackPos) {
                  throw new Error('func name not implemented'); 
@@ -826,7 +826,7 @@ class Parser extends ParserAbstract
                  $this->semValue = $this->semStack[$stackPos-(1-1)]; 
             },
             18 => function ($stackPos) {
-                 throw new Error('dim fetch not implemented'); 
+                 $this->semValue = $this->semStack[$stackPos-(4-1)]; 
             },
             19 => function ($stackPos) {
                  $this->semValue = new Expr\CallExpr($this->semStack[$stackPos-(3-1)], [], $this->startAttributeStack[$stackPos-(3-1)] + $this->endAttributes); 
@@ -1408,6 +1408,7 @@ class Parser extends ParserAbstract
                  throw new Error('direct_abstract_declarator bracket type qualifier list not implemented'); 
             },
             212 => function ($stackPos) {
+                 dd($this->semStack[$stackPos - 3]);
                  throw new Error('direct_abstract_declarator bracket assignment_expr not implemented'); 
             },
             213 => function ($stackPos) {
@@ -1453,7 +1454,7 @@ class Parser extends ParserAbstract
                  throw new Error('initializer brackeded trailing not implemented'); 
             },
             227 => function ($stackPos) {
-                 throw new Error('initializer assignment_expression not implemented'); 
+                 $this->semValue = $this->semStack[$stackPos-(1-1)]; 
             },
             228 => function ($stackPos) {
                  throw new Error('initializer_list designator initializer not implemented'); 
@@ -1507,10 +1508,10 @@ class Parser extends ParserAbstract
                  throw new Error('labeled_statement identifier not implemented'); 
             },
             245 => function ($stackPos) {
-                 throw new Error('labeled_statement case not implemented'); 
+                 $this->semValue = new Node\Stmt\CaseStmt($this->semStack[$stackPos-(4-2)], $this->semStack[$stackPos-(4-4)], $this->startAttributeStack[$stackPos-(4-1)] + $this->endAttributes); 
             },
             246 => function ($stackPos) {
-                 throw new Error('labeled_statement default not implemented'); 
+                 $this->semValue = new Node\Stmt\CaseStmt(null, $this->semStack[$stackPos-(3-3)], $this->startAttributeStack[$stackPos-(3-1)] + $this->endAttributes); 
             },
             247 => function ($stackPos) {
                  $this->semValue = new Node\Stmt\CompoundStmt([], $this->startAttributeStack[$stackPos-(2-1)] + $this->endAttributes); 
@@ -1525,7 +1526,7 @@ class Parser extends ParserAbstract
                  $this->semStack[$stackPos-(2-1)][] = $this->semStack[$stackPos-(2-2)]; $this->semValue = $this->semStack[$stackPos-(2-1)]; 
             },
             251 => function ($stackPos) {
-                 throw new Error('block_item declaration not implemented'); 
+                 /*Skip?*/ 
             },
             252 => function ($stackPos) {
                  $this->semValue = $this->semStack[$stackPos-(1-1)]; 
@@ -1537,16 +1538,16 @@ class Parser extends ParserAbstract
                  $this->semValue = $this->semStack[$stackPos-(2-1)]; 
             },
             255 => function ($stackPos) {
-                 throw new Error('if else not implemented'); 
+                 $this->semValue = new Node\Stmt\IfStmt($this->semStack[$stackPos-(7-3)], ['stmts' => is_array($this->semStack[$stackPos-(7-5)]) ? $this->semStack[$stackPos-(7-5)] : array($this->semStack[$stackPos-(7-5)]), 'elseifs' => $this->semStack[$stackPos-(7-6)], 'else' => $this->semStack[$stackPos-(7-7)]], $this->startAttributeStack[$stackPos-(7-1)] + $this->endAttributes); 
             },
             256 => function ($stackPos) {
-                 throw new Error('if not implemented'); 
+                 $this->semValue = new Node\Stmt\IfStmt($this->semStack[$stackPos-(5-3)], ['stmts' => is_array($this->semStack[$stackPos-(5-5)]) ? $this->semStack[$stackPos-(5-5)] : array($this->semStack[$stackPos-(5-5)])], $this->startAttributeStack[$stackPos-(5-1)] + $this->endAttributes); 
             },
             257 => function ($stackPos) {
-                 throw new Error('switch not implemented'); 
+                 $this->semValue = new Node\Stmt\SwitchStmt($this->semStack[$stackPos-(5-3)], $this->semStack[$stackPos-(5-5)], $this->startAttributeStack[$stackPos-(5-1)] + $this->endAttributes); 
             },
             258 => function ($stackPos) {
-                 throw new Error('iteration 0 not implemented'); 
+                 $this->semValue = new Node\Stmt\WhileStmt($this->semStack[$stackPos-(5-3)], $this->semStack[$stackPos-(5-5)], $this->startAttributeStack[$stackPos-(5-1)] + $this->endAttributes); 
             },
             259 => function ($stackPos) {
                  throw new Error('iteration 1 not implemented'); 
@@ -1570,7 +1571,7 @@ class Parser extends ParserAbstract
                  throw new Error('continue not implemented'); 
             },
             266 => function ($stackPos) {
-                 throw new Error('break not implemented'); 
+                 $this->semValue = new Node\Stmt\CaseStmt($this->semStack[$stackPos-(2-2)], $this->startAttributeStack[$stackPos-(2-1)] + $this->endAttributes); 
             },
             267 => function ($stackPos) {
                  $this->semValue = new Node\Stmt\ReturnStmt(null, $this->startAttributeStack[$stackPos-(2-1)] + $this->endAttributes); 
